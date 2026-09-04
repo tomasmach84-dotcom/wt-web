@@ -1,0 +1,35 @@
+# WT - WINDOWS TOMORROW s.r.o. — denní světlo do interiéru
+# PŘED OSTRÝM SPUŠTĚNÍM (stejný seznam je i v hlavičce index.html):
+# 1) v index.html smazat řádek <meta name="robots" content="noindex, nofollow">
+# 2) v index.html odkomentovat canonical a og:url a doplnit skutečnou adresu
+# 3) tady dole a v sitemap.xml nahradit www.DOMENA.cz stejnou adresou
+
+User-agent: *
+Allow: /
+
+# Vyhledávací a asistenční roboti smí obsah číst i citovat
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: SeznamBot
+Allow: /
+
+Sitemap: https://www.DOMENA.cz/sitemap.xml

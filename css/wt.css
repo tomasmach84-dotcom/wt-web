@@ -1,0 +1,609 @@
+/* ==========================================================================
+   WT - WINDOWS TOMORROW s.r.o.  ·  Denní světlo do interiéru
+   Zastřešující web čtyř technologií (Solatube, GLASSFLOOR, LAMILUX, šachta)
+
+   DESIGNOVÝ SYSTÉM = most mezi weby Solatube a GLASSFLOOR:
+     · firemní barvy z loga WT: tyrkys #41b1ca + žlutá #ffff82
+     · ocelová tmavá paleta, tenké velké nadpisy,
+       12sloupcový grid, podtržená CTA, reveal .rv ..... z GLASSFLOOR
+   Hlavní vizuální motiv = STŘÍDÁNÍ SVĚTLA A STÍNU: sekce jdou
+   tmavá / světlá / tmavá, stránka se při čtení postupně rozsvěcuje.
+   ========================================================================== */
+
+:root{
+  /* ---- FIREMNÍ BARVY Z LOGA WT (WT LOGO WT.pdf, 3. 9. 2026) ----
+     tyrkysová #41b1ca = plocha znaku, žlutá #ffff82 = paprsky světla */
+  --brand:#41b1ca;
+  --brand-yellow:#ffff82;
+
+  /* stín - tmavý tyrkys odvozený z firemní barvy */
+  --deep:#267688;
+  --steel:#267688;
+  --steel-2:#267688;
+  /* horní a spodní lišta (hlavička, patička) - mnohem tmavší než zbytek stránky */
+  --bar-dark:#143e48;
+  /* světlo - jemný tyrkysový nádech místo čisté bílé */
+  --paper:#eef7f9;
+  --paper-alt:#dbeef3;
+  --light:#e6f4f7;
+  /* text */
+  --ink:#082b32;
+  --ink-soft:#426c76;
+  --grey:#b8d4db;
+  /* akcent = barva denního světla (firemní žlutá na tmavém,
+     firemní tyrkys jako plocha, tmavý tyrkys pro text na světlém) */
+  --gold:#41b1ca;
+  --gold-soft:#ffff82;
+  --gold-deep:#1d5a68;
+
+  /* pozadí hero - firemní tyrkys ztlumený do fotografické modři */
+  --hero-blue:#267688;
+
+  --hair-l:rgba(255,255,255,.18);
+  --hair-d:rgba(65,177,202,.16);
+
+  --max:1660px;
+  --gut:clamp(22px,4.5vw,64px);
+  --gap:clamp(18px,2.2vw,32px);
+  --s-xl:clamp(88px,9vw,150px);
+  --s-md:clamp(62px,6.6vw,108px);
+  --s-sm:clamp(36px,4.2vw,64px);
+
+  --sans:"Helvetica Neue",Helvetica,"Inter","Segoe UI",Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);font-weight:300;font-size:16.5px;line-height:1.7;
+  color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* height:auto je nutné: HTML atribut height u <img> jinak přebije aspect-ratio
+   a fotka se ořízne úplně jinak, než sekce zamýšlí. */
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+ul,ol{list-style:none}
+::selection{background:var(--gold);color:#fff}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.g{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap)}
+
+/* ---------- typografie ---------- */
+.h1{font-weight:200;letter-spacing:-.035em;line-height:1.02;font-size:clamp(40px,5.6vw,94px)}
+.h2{font-weight:250;letter-spacing:-.03em;line-height:1.05;font-size:clamp(32px,4vw,64px)}
+.h3{font-weight:300;letter-spacing:-.022em;line-height:1.14;font-size:clamp(23px,2.5vw,38px)}
+.lead{font-weight:300;font-size:clamp(18px,1.55vw,23px);line-height:1.55}
+.k{font-size:12px;letter-spacing:.26em;text-transform:uppercase;font-weight:400;color:var(--gold-deep)}
+.k.on-dark{color:var(--gold-soft)}
+.dim{color:var(--ink-soft)}
+.dark .dim{color:var(--grey)}
+.rule{display:inline-block;width:34px;height:1px;background:currentColor;vertical-align:middle;
+  margin-right:14px;opacity:.6}
+
+/* ---------- dva interakční styly (jako GLASSFLOOR) ---------- */
+.cta{display:inline-block;font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:400;
+  border:1px solid currentColor;padding:15px 34px;transition:background .35s var(--ease),color .35s var(--ease),border-color .35s}
+.cta:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.dark .cta:hover,.cta.light:hover{background:#fff;color:var(--bar-dark);border-color:#fff}
+.lnk{display:inline-flex;align-items:center;gap:12px;font-size:13.5px;letter-spacing:.14em;
+  text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:6px;transition:opacity .25s,gap .25s}
+.lnk:hover{opacity:.62;gap:18px}
+.lnk svg{width:28px;height:9px;overflow:visible;flex:0 0 auto}
+
+/* ---------- odhalování při scrollu ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity 1s var(--ease),transform 1.1s var(--ease)}
+.rv.on{opacity:1;transform:none}
+.rv-img{clip-path:inset(0 0 14% 0);opacity:.001;transition:clip-path 1.3s var(--ease),opacity 1.1s var(--ease)}
+.rv-img.on{clip-path:inset(0 0 0 0);opacity:1}
+@media(prefers-reduced-motion:reduce){
+  .rv,.rv-img{opacity:1 !important;transform:none !important;clip-path:none !important;transition:none}
+}
+
+/* ==========================================================================
+   HLAVIČKA
+   ========================================================================== */
+/* lišta má být VŽDY zřetelně tmavší než pozadí pod ní (i na úvodní
+   obrazovce, ne jen po scrollu) - proto má napevno vlastní tmavé
+   poloprůhledné pozadí, ne jen gradient co mizí směrem dolů */
+/* přesná barva loga, plně krycí - žádná průhlednost, žádné míchání s tím,
+   co je pod lištou, a tedy žádný jiný odstín */
+header{position:fixed;inset:0 0 auto 0;z-index:90;color:#fff;
+  background:var(--bar-dark);
+  transition:color .4s,border-color .4s;
+  border-bottom:1px solid transparent}
+header.scrolled{border-color:var(--hair-l)}
+.nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:24px;
+  min-height:92px;padding:14px var(--gut);max-width:var(--max);margin:0 auto;transition:min-height .4s var(--ease)}
+header.scrolled .nav{min-height:74px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{height:34px;width:auto;transition:height .4s var(--ease)}
+header.scrolled .brand img{height:29px}
+.brand span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.72;
+  border-left:1px solid var(--hair-l);padding-left:14px;line-height:1.35;max-width:158px}
+.nav ul{display:flex;gap:clamp(18px,2.6vw,40px)}
+.nav ul a{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;transition:opacity .25s,color .25s}
+.nav ul a:hover{opacity:1;color:var(--gold-soft)}
+.nav .cta{font-size:12px;padding:12px 24px;border-color:rgba(255,255,255,.7)}
+.nav .cta:hover{background:#fff;color:var(--bar-dark);border-color:#fff}
+.menu-btn{display:none;flex-direction:column;gap:6px;padding:6px}
+.menu-btn i{display:block;width:26px;height:1px;background:currentColor;transition:transform .3s,opacity .3s}
+header.menu-open .menu-btn i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+header.menu-open .menu-btn i:nth-child(2){opacity:0}
+header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mmenu{display:none;background:var(--bar-dark);border-top:1px solid var(--hair-l);padding:22px var(--gut) 36px}
+.mmenu a{display:block;padding:14px 0;font-size:17px;letter-spacing:.06em;border-bottom:1px solid rgba(255,255,255,.08)}
+.mmenu .cta{margin-top:24px;border-color:rgba(255,255,255,.7)}
+@media(max-width:1080px){
+  .nav ul,.nav>.cta{display:none}
+  .menu-btn{display:flex}
+  header.menu-open{background:var(--bar-dark)}
+  header.menu-open .mmenu{display:block}
+}
+@media(max-width:520px){.brand span{display:none}}
+
+/* ==========================================================================
+   1 / HERO - mozaika čtyř realizací
+   ========================================================================== */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;background:var(--hero-blue);color:#fff;
+  padding:clamp(104px,13vh,150px) 0 clamp(40px,6vh,72px)}
+/* žádná fototextura ani překryv - pozadí je jen a pouze přesná barva loga */
+
+.hero-grid{position:relative;z-index:2;width:100%;max-width:var(--max);margin:0 auto;
+  padding:0 var(--gut);display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
+  gap:clamp(28px,4vw,76px);align-items:center}
+
+.hero .k{color:var(--gold-soft);margin-bottom:clamp(16px,2.4vh,28px);display:block}
+.hero .h1{font-size:clamp(34px,3.8vw,62px);max-width:17ch}
+.hero .h1 em{font-style:normal;color:var(--gold-soft)}
+.hero-lead{margin-top:clamp(20px,2.8vh,32px);max-width:44ch;color:#d0e3e7;
+  font-size:clamp(15.5px,1.15vw,18px);line-height:1.62}
+/* druhý, doplňkový odstavec v hero je vizuálně o stupeň tišší */
+.hero-lead.dim{font-size:clamp(14px,1.02vw,16px);margin-top:clamp(12px,1.4vh,18px);max-width:48ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;margin-top:clamp(24px,3.4vh,40px)}
+
+/* ---------- mozaika ---------- */
+.mozaika{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);
+  gap:clamp(8px,.9vw,14px);height:min(82vh,780px)}
+.dl{position:relative;overflow:hidden;display:block;background:var(--deep);
+  opacity:0;animation:dlIn 1.1s var(--ease) forwards}
+.dl:nth-child(1){animation-delay:.06s}
+.dl:nth-child(2){animation-delay:.18s}
+.dl:nth-child(3){animation-delay:.3s}
+.dl:nth-child(4){animation-delay:.42s}
+@keyframes dlIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.dl img{width:100%;height:100%;object-fit:cover;transition:transform 1.6s var(--ease),filter .5s var(--ease)}
+.dl::after{content:"";position:absolute;inset:0;pointer-events:none;transition:opacity .5s var(--ease);
+  background:linear-gradient(to top,rgba(18,55,64,.88) 0%,rgba(18,55,64,.32) 34%,transparent 62%)}
+.dl:hover img{transform:scale(1.05)}
+.dl:hover::after{opacity:.8}
+
+/* štítek technologie na dlaždici */
+.dl-txt{position:absolute;left:0;right:0;bottom:0;z-index:2;
+  padding:clamp(14px,1.5vw,24px) clamp(16px,1.6vw,26px);
+  display:grid;grid-template-columns:auto 1fr;gap:2px clamp(10px,1vw,16px);align-items:baseline}
+.dl-txt i{grid-row:1 / span 2;font-style:normal;font-size:12px;letter-spacing:.18em;
+  color:var(--gold-soft);padding-top:3px}
+.dl-txt b{font-weight:500;font-size:clamp(14px,1.05vw,17px);letter-spacing:.16em;text-transform:uppercase;
+  line-height:1.2}
+.dl-txt b sup{font-size:.55em;letter-spacing:0}
+.dl-txt em{font-style:normal;font-size:clamp(12px,.85vw,14px);color:#c8dbe0;letter-spacing:.01em}
+.dl:hover .dl-txt b{color:var(--gold-soft)}
+/* zvýraznění jedné technologie ze spodní lišty se nepoužívá - štítky jsou přímo na fotkách */
+
+@media(max-width:1040px){
+  .hero{padding-top:clamp(96px,12vh,130px)}
+  .hero-grid{grid-template-columns:1fr;gap:clamp(26px,4vh,44px)}
+  .hero .h1{max-width:20ch}
+  .mozaika{height:auto;grid-template-rows:repeat(2,1fr)}
+  .dl{min-height:min(30vh,240px)}
+}
+@media(max-width:620px){
+  .mozaika{grid-template-columns:1fr;grid-template-rows:none}
+  .dl{min-height:min(34vh,260px)}
+  .hero .h1{font-size:clamp(30px,7.4vw,40px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .dl{animation:none;opacity:1}
+  .dl img{transition:none}
+}
+
+/* ==========================================================================
+   2 / PROBLÉM - tmavá ocel
+   ========================================================================== */
+.dark{background:var(--steel);color:var(--light)}
+.dark .h1,.dark .h2,.dark .h3{color:#fff}
+.deep{background:var(--deep);color:var(--light)}
+
+.problem{padding:var(--s-xl) 0;position:relative;overflow:hidden}
+.problem::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(48% 62% at 80% -6%,rgba(255,255,130,.13),transparent 62%)}
+.problem .g{position:relative;align-items:start;row-gap:clamp(40px,6vw,68px)}
+.problem-text{grid-column:span 6}
+.problem h2{margin:26px 0 30px;max-width:15ch}
+.problem h2 b{font-weight:200;color:var(--gold-soft)}
+.problem p{color:#d0e3e7;max-width:52ch;margin-bottom:20px}
+/* fotka kopíruje výšku textového sloupce, aby oba končily zároveň */
+.problem-photo{grid-column:span 6;position:relative;align-self:stretch;
+  display:flex;flex-direction:column}
+.problem-photo img{width:100%;flex:1 1 auto;min-height:340px;object-fit:cover}
+.problem-photo figcaption{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding-top:14px}
+@media(max-width:900px){
+  .problem-text,.problem-photo{grid-column:span 12}
+  .problem-photo{display:block}
+  .problem-photo img{aspect-ratio:4/3;min-height:0}
+}
+
+/* ==========================================================================
+   NA KONCI ROZHODUJE SVĚTLO - tři principy cesty denního světla
+   Střídmý technický blok: vlasová linka, tyrkysový úsek nad každým principem,
+   žádné ikony. Staví na stejných proměnných jako zbytek webu.
+   ========================================================================== */
+.principy{padding:var(--s-md) 0;background:var(--light)}
+.pri-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+  gap:clamp(22px,4vw,72px);align-items:end;margin-bottom:clamp(38px,4.4vw,66px)}
+.pri-head h2{margin:22px 0 0}
+.pri-head p{color:var(--ink-soft);max-width:54ch}
+.pri-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,3vw,56px);
+  border-top:1px solid var(--hair-d)}
+.pri-grid>div{position:relative;padding-top:clamp(20px,2.4vw,34px)}
+.pri-grid>div::before{content:"";position:absolute;top:-1px;left:0;
+  width:clamp(38px,5.5vw,86px);height:2px;background:var(--gold)}
+.pri-n{display:block;font-size:12px;letter-spacing:.2em;color:var(--ink-soft)}
+.pri-t{font-size:clamp(19px,1.75vw,26px);font-weight:300;letter-spacing:.14em;
+  text-transform:uppercase;margin:14px 0 14px}
+.pri-grid p{color:var(--ink-soft);font-size:15.5px;line-height:1.6;max-width:36ch}
+.pri-note{margin-top:clamp(28px,3.2vw,46px);font-size:15px;color:var(--ink-soft);max-width:70ch}
+.pri-note b{font-weight:400;color:var(--ink)}
+@media(max-width:900px){
+  .pri-head{grid-template-columns:1fr;align-items:start}
+  .pri-grid{grid-template-columns:1fr;gap:0}
+  .pri-grid>div{padding-bottom:clamp(20px,3vw,30px);border-bottom:1px solid var(--hair-d)}
+  .pri-grid>div:last-child{border-bottom:0}
+}
+
+/* ==========================================================================
+   3 / JAK POTŘEBUJETE SVĚTLO PŘIVÉST - interaktivní výběr situace
+   ========================================================================== */
+.situace{padding:var(--s-xl) 0;background:var(--paper)}
+.sec-head{max-width:66ch;margin-bottom:clamp(44px,5.5vw,80px)}
+.sec-head h2{margin:22px 0 24px}
+.sec-head p{color:var(--ink-soft);max-width:58ch}
+
+.sit-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(26px,4vw,72px);align-items:start}
+.sit-list{border-top:1px solid var(--hair-d)}
+.sit-item{display:flex;align-items:baseline;gap:clamp(14px,2vw,26px);width:100%;text-align:left;
+  padding:clamp(18px,2.2vw,26px) 4px;border-bottom:1px solid var(--hair-d);transition:padding-left .4s var(--ease)}
+.sit-item .n{font-size:12px;letter-spacing:.16em;color:var(--ink-soft);flex:0 0 auto;transition:color .3s}
+.sit-item .t{font-size:clamp(19px,1.9vw,27px);font-weight:300;line-height:1.25;letter-spacing:-.01em;transition:color .3s}
+.sit-item .arw{margin-left:auto;flex:0 0 auto;opacity:0;transform:translateX(-8px);
+  transition:opacity .35s,transform .35s;color:var(--gold)}
+.sit-item:hover{padding-left:14px}
+.sit-item:hover .t{color:var(--gold-deep)}
+.sit-item.on{padding-left:14px}
+.sit-item.on .t{color:var(--gold-deep)}
+.sit-item.on .n{color:var(--gold)}
+.sit-item.on .arw{opacity:1;transform:none}
+.sit-note{margin-top:26px;font-size:14.5px;color:var(--ink-soft)}
+
+.sit-stage{position:relative;min-height:min(72vh,640px)}
+.sit-detail{position:absolute;inset:0;opacity:0;visibility:hidden;transform:scale(1.012);
+  transition:opacity .7s var(--ease),transform 1s var(--ease),visibility .7s}
+.sit-detail.on{opacity:1;visibility:visible;transform:none}
+.sit-detail figure{position:relative;overflow:hidden;background:#d3e6ea}
+.sit-detail img{width:100%;height:min(52vh,470px);object-fit:cover}
+/* popisky přímo ve fotce PŘED/PO (situace 01) - jsou to prvky nad obrázkem,
+   takže je ořez fotky nikdy neusekne */
+.pred-po .pp{position:absolute;bottom:clamp(10px,1.4vw,18px);z-index:3;
+  font-size:clamp(9.5px,.72vw,11px);letter-spacing:.16em;text-transform:uppercase;font-weight:500;
+  line-height:1;padding:8px 12px;white-space:nowrap}
+.pred-po .pp-l{left:clamp(10px,1.2vw,16px);background:rgba(22,69,80,.86);color:#fff}
+.pred-po .pp-r{right:clamp(10px,1.2vw,16px);background:var(--gold);color:#09242a}
+.sit-detail figure::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(18,55,64,.30),transparent 46%)}
+.sit-body{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 30px;
+  padding-top:26px;border-top:1px solid var(--hair-d);margin-top:26px}
+.sit-body .k{display:block;margin-bottom:10px}
+.sit-body h3{font-size:clamp(22px,2.2vw,32px);font-weight:300;letter-spacing:-.012em}
+.sit-body p{color:var(--ink-soft);max-width:42ch;font-size:15.5px;margin-top:8px}
+/* Na užších oknech je sloupec s fotkou úzký, ale výška fotky zůstávala stejná,
+   takže se z fotky ořezávaly boky. Tady necháme fotku držet poměr 4:3 a výška
+   se dopočítá ze šířky - z fotky se pak neořízne skoro nic. */
+@media(max-width:1240px) and (min-width:1001px){
+  .sit-detail img{height:auto;aspect-ratio:4/3}
+}
+@media(max-width:1000px){
+  .sit-grid{grid-template-columns:1fr}
+  .sit-stage{min-height:0;margin-top:10px}
+  .sit-detail{position:relative;display:none}
+  .sit-detail.on{display:block}
+  .sit-detail img{height:auto;aspect-ratio:3/2}
+  .sit-item .arw{display:none}
+}
+
+/* ==========================================================================
+   4 / ČTYŘI TECHNOLOGIE - velké dělené scény, střídání světla a stínu
+   ========================================================================== */
+.tech{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);align-items:stretch;position:relative}
+.tech-photo{position:relative;overflow:hidden;min-height:clamp(420px,76vh,880px)}
+.tech-photo img{width:100%;height:100%;object-fit:cover}
+.tech-photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:18px 22px;font-size:11.5px;
+  letter-spacing:.18em;text-transform:uppercase;color:#fff;
+  background:linear-gradient(to top,rgba(18,55,64,.72),transparent)}
+.tech-body{display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(48px,7vw,108px) clamp(26px,5vw,92px)}
+.tech.dark .tech-body{background:var(--steel)}
+.tech.light .tech-body{background:var(--paper)}
+.tech.alt .tech-body{background:var(--paper-alt)}
+.tech.rev .tech-photo{order:2}
+.tech-num{font-size:12px;letter-spacing:.3em;color:var(--gold);display:block;margin-bottom:22px}
+.tech.dark .tech-num{color:var(--gold-soft)}
+.tech-body h2{margin:14px 0 22px;letter-spacing:.005em}
+.tech-body h2 sup{font-size:.3em;top:-1.5em;letter-spacing:0}
+.tech-body .lead{max-width:44ch;margin-bottom:30px}
+.tech.dark .tech-body .lead{color:#d0e3e7}
+.tech.light .tech-body .lead,.tech.alt .tech-body .lead{color:var(--ink-soft)}
+/* dva sloupce a lichá poslední položka přes celou šířku, aby poslední řádek
+   nekončil prázdným místem */
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 26px;
+  border-top:1px solid var(--hair-d);padding-top:22px;margin-bottom:34px}
+.tech.dark .facts{border-top-color:var(--hair-l)}
+.facts li{font-size:14px;padding:8px 0;line-height:1.45;color:var(--ink-soft)}
+.facts li:last-child:nth-child(odd){grid-column:1 / -1}
+.facts li b{display:block;font-weight:400;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold-deep);margin-bottom:4px}
+.tech.dark .facts li{color:#c8dbe0}
+.tech.dark .facts li b{color:var(--gold-soft)}
+/* postavení WT u dané technologie (výhradní dodavatel / dodavatel pro ČR) */
+.role{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold-deep);margin:-12px 0 30px}
+.tech.dark .role{color:var(--gold-soft)}
+.role .dot{width:6px;height:6px;flex:0 0 auto;background:currentColor;border-radius:50%;opacity:.85}
+.role-mini{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold-soft);margin-top:6px}
+/* Odkaz na samostatný web značky je hlavní cesta ze stránky ven,
+   proto je to plné tyrkysové tlačítko, ne jen obrys. */
+.cta.web{background:var(--gold);border-color:var(--gold);color:#09242a}
+.cta.web:hover{background:var(--gold-soft);border-color:var(--gold-soft);color:#09242a}
+/* na tmavé sekci je tlačítko firemně žluté (žlutý paprsek na tyrkysové ploše
+   loga), aby se neztratilo v tyrkysovém pozadí */
+.tech.dark .cta.web{background:var(--brand-yellow);border-color:var(--brand-yellow);color:#09242a}
+.tech.dark .cta.web:hover{background:#fff;border-color:#fff;color:#09242a}
+.go-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px}
+/* druhý, tišší odkaz přímo na web značky u každé situace */
+.sit-links{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px}
+.web-mini{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);
+  border-bottom:1px solid rgba(39,121,140,.5);padding-bottom:4px;transition:opacity .25s}
+.web-mini:hover{opacity:.6}
+.go-note{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+@media(max-width:960px){
+  .tech{grid-template-columns:1fr}
+  .tech.rev .tech-photo{order:0}
+  .tech-photo{min-height:min(58vh,440px)}
+}
+
+/* ==========================================================================
+   5 / REALIZACE
+   ========================================================================== */
+.realizace{padding:var(--s-xl) 0}
+.realizace .sec-head p{color:var(--grey)}
+.ref-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(26px,3vw,44px) var(--gap)}
+.ref{position:relative}
+.ref .shot{overflow:hidden}
+.ref img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
+.ref:hover img{transform:scale(1.04)}
+.ref figcaption{padding-top:14px;font-size:13.5px;color:var(--grey);display:flex;gap:14px;align-items:baseline}
+.ref figcaption b{font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);
+  flex:0 0 auto;padding-top:2px}
+/* Poměry stran jsou dopočítané tak, aby dvojice v jednom řádku končily ve stejné
+   výšce a pod kratší fotkou nezůstávala prázdná díra:
+   ref-a (7 sloupců, 3:2) + ref-b (5 sloupců, 53:50) mají stejnou výšku,
+   stejně tak ref-d (8 sloupců, 16:9) + ref-f (4 sloupce, 6:7).
+   Trojice ref-c a dvojice ref-e mají stejný poměr, takže sedí samy od sebe. */
+.ref-a{grid-column:span 7}.ref-a img{aspect-ratio:3/2}
+.ref-b{grid-column:span 5}.ref-b img{aspect-ratio:53/50}
+.ref-c{grid-column:span 4}.ref-c img{aspect-ratio:3/4}
+.ref-d{grid-column:span 8}.ref-d img{aspect-ratio:16/9}
+.ref-e{grid-column:span 6}.ref-e img{aspect-ratio:3/2}
+.ref-f{grid-column:span 4}.ref-f img{aspect-ratio:6/7}
+@media(max-width:840px){
+  .ref-a,.ref-b,.ref-c,.ref-d,.ref-e,.ref-f{grid-column:span 12}
+  .ref-c img{aspect-ratio:3/4}   /* portrétní fotky nechat na výšku, jinak se ořízne půlka snímku */
+}
+
+/* ==========================================================================
+   6 / PRO ARCHITEKTY
+   ========================================================================== */
+.architekti{padding:var(--s-xl) 0;background:var(--paper)}
+/* vlevo přehled čtyř technologií místo jedné fotky - k „nejdřív posudek,
+   potom výrobek" patří ukázka variant, ze kterých se vybírá */
+.arch-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+  gap:clamp(30px,5vw,84px);align-items:stretch}
+.arch-vary{display:flex;flex-direction:column}
+.av-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:1fr;gap:clamp(8px,1vw,14px);flex:1 1 auto}
+.av-grid li{position:relative;overflow:hidden;background:var(--deep);min-height:190px}
+.av-grid img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.av-grid li:hover img{transform:scale(1.05)}
+.av-grid li::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(18,55,64,.85) 0%,rgba(18,55,64,.26) 42%,transparent 68%)}
+.av-grid span{position:absolute;left:clamp(12px,1.2vw,18px);right:12px;bottom:clamp(11px,1.2vw,16px);
+  z-index:2;color:#fff;font-size:clamp(13px,1.05vw,15px);line-height:1.25;display:block}
+.av-grid span b{display:block;font-weight:400;font-size:10.5px;letter-spacing:.24em;
+  color:var(--gold-soft);margin-bottom:5px}
+.av-grid span em{display:block;font-style:normal;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(255,255,255,.72);margin-top:3px}
+.av-pozn{font-size:13px;line-height:1.5;color:var(--ink-soft);padding-top:14px;max-width:46ch}
+.arch-photo figcaption{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding-top:14px}
+.arch-list{border-top:1px solid var(--hair-d);margin-top:34px}
+.arch-list li{display:grid;grid-template-columns:44px 1fr;gap:clamp(12px,1.6vw,24px);
+  padding:clamp(18px,2vw,24px) 0;border-bottom:1px solid var(--hair-d)}
+.arch-list .n{font-size:12px;letter-spacing:.14em;color:var(--gold)}
+.arch-list h3{font-size:clamp(18px,1.5vw,22px);font-weight:400;margin-bottom:6px}
+.arch-list p{font-size:15.5px;color:var(--ink-soft);max-width:54ch}
+.arch-cta{margin-top:38px;display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center}
+@media(max-width:900px){
+  .arch-grid{grid-template-columns:1fr}
+  .av-grid li{min-height:0;aspect-ratio:1/1}
+}
+
+/* ==========================================================================
+   7 / WT - WINDOWS TOMORROW
+   ========================================================================== */
+.wt{position:relative;padding:var(--s-xl) 0;color:var(--light);background:var(--deep);overflow:hidden}
+/* žádná fototextura ani překryv - pozadí je jen a pouze přesná barva loga */
+.wt .wrap{position:relative;z-index:2}
+.wt-logo{height:52px;width:auto;margin-bottom:34px}
+.wt-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(30px,5vw,80px);align-items:stretch}
+.wt-side{display:flex;flex-direction:column;justify-content:space-between;gap:clamp(30px,4vw,56px)}
+.wt p{color:#d0e3e7;max-width:54ch;margin-bottom:18px}
+.wt-nums{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(24px,3vw,40px);
+  border-top:1px solid var(--hair-l);padding-top:clamp(28px,3vw,40px);margin-top:clamp(28px,3vw,40px)}
+.wt-nums b{display:block;font-size:clamp(32px,3.6vw,54px);font-weight:200;line-height:1;color:#fff}
+.wt-nums span{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-top:12px}
+.wt-brands{border-top:1px solid var(--hair-l);margin-top:0;padding-top:clamp(28px,3vw,40px);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px clamp(24px,3vw,44px)}
+.wt-brands a{display:block;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08);transition:color .3s}
+.wt-brands a:hover{color:var(--gold-soft)}
+.wt-brands b{display:block;font-weight:400;font-size:16px;letter-spacing:.1em}
+.wt-brands span{display:block;font-size:12.5px;color:var(--grey);margin-top:4px}
+@media(max-width:900px){.wt-grid{grid-template-columns:1fr}}
+
+/* ==========================================================================
+   VE ZKRATCE (souhrn pro čtenáře i vyhledávače)
+   ========================================================================== */
+/* „Ve zkratce" je pás přes celou šířku pod textem i fotkou - dřív visel jen
+   v levém sloupci a vedle fotky zůstávalo velké prázdné místo */
+.zkratka{grid-column:1 / -1;border-top:1px solid var(--hair-l);padding-top:clamp(24px,2.8vw,34px)}
+.zkratka-nadpis{font-size:12px;letter-spacing:.26em;text-transform:uppercase;font-weight:400;
+  color:var(--gold-soft);margin-bottom:18px}
+.zkratka dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(22px,2.6vw,34px) clamp(24px,3vw,48px)}
+.zk-pol{border-top:1px solid var(--hair-l);padding-top:14px}
+@media(max-width:1100px){.zkratka dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.zkratka dt{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);
+  margin-bottom:8px}
+.zkratka dd{font-size:15px;line-height:1.6;color:#d0e3e7;max-width:42ch}
+@media(max-width:640px){
+  .zkratka dl{grid-template-columns:1fr;gap:20px}
+  .zkratka dd{margin-bottom:0}
+}
+
+/* ==========================================================================
+   ČASTÉ DOTAZY
+   ========================================================================== */
+/* dvousloupcová sazba: nadpis vlevo, otázky vpravo - dřív zůstávala
+   celá pravá třetina sekce prázdná */
+.faq{padding:var(--s-xl) 0;background:var(--paper)}
+.faq-grid{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);
+  gap:clamp(28px,4vw,72px);align-items:start}
+.faq-grid .sec-head{margin-bottom:0;position:sticky;top:120px}
+.faq-list{border-top:1px solid var(--hair-d)}
+@media(max-width:900px){
+  .faq-grid{grid-template-columns:1fr}
+  .faq-grid .sec-head{position:static}
+}
+.faq details{border-bottom:1px solid var(--hair-d)}
+.faq summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:18px;
+  padding:clamp(18px,2vw,24px) 4px;transition:color .3s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";margin-left:auto;flex:0 0 auto;width:12px;height:12px;
+  border-right:1px solid currentColor;border-bottom:1px solid currentColor;
+  transform:rotate(45deg) translate(-3px,-3px);transition:transform .35s var(--ease);color:var(--gold)}
+.faq details[open] summary::after{transform:rotate(-135deg) translate(-3px,-3px)}
+.faq summary:hover{color:var(--gold-deep)}
+.faq summary h3{font-size:clamp(17px,1.5vw,21px);font-weight:400;line-height:1.3;display:inline}
+.faq details p{padding:0 40px clamp(20px,2.2vw,28px) 4px;max-width:74ch;color:var(--ink-soft);font-size:16px}
+
+/* ==========================================================================
+   KONTAKT + PATIČKA
+   ========================================================================== */
+.kontakt{padding:var(--s-xl) 0;background:var(--paper-alt)}
+.kontakt h2{max-width:16ch;margin:22px 0 26px}
+.kontakt .lead{color:var(--ink-soft);max-width:52ch}
+.kon-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+  gap:clamp(26px,4vw,72px) clamp(30px,5vw,80px);align-items:start}
+.kon-vyber,.kon-form{grid-column:1 / -1}
+/* kontakty se rozprostřou na výšku textu vedle, ať vpravo nezůstane díra */
+.kon-list{border-top:1px solid var(--hair-d);align-self:stretch;
+  display:flex;flex-direction:column;justify-content:space-between}
+.kon-list a,.kon-list div{display:block;padding:16px 0;border-bottom:1px solid var(--hair-d);flex:1 1 auto;
+  font-size:clamp(17px,1.5vw,21px);font-weight:300;transition:color .3s}
+.kon-list a:hover{color:var(--gold-deep)}
+.kon-list small{display:block;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:2px}
+/* ---------- výběr technologie ke konzultaci ---------- */
+.kon-vyber{margin-top:34px}
+.kv-nadpis{display:block;font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold-deep);margin-bottom:16px}
+.kv-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kv{position:relative;display:block;cursor:pointer}
+.kv input{position:absolute;opacity:0;width:1px;height:1px}
+.kv-txt{position:relative;display:block;padding:14px 16px 15px;border:1px solid var(--hair-d);
+  background:rgba(255,255,255,.42);transition:border-color .25s,background .25s,box-shadow .25s}
+.kv-txt b{display:block;font-weight:400;font-size:15.5px;letter-spacing:-.01em}
+.kv-txt em{display:block;font-style:normal;font-size:12.5px;line-height:1.45;color:var(--ink-soft);margin-top:3px}
+.kv:hover .kv-txt{border-color:var(--gold);background:#fff}
+/* vybraná volba je plná tyrkysová plocha s bílým textem a žlutou tečkou,
+   aby na první pohled bylo jasné, co je zvolené */
+.kv input:checked + .kv-txt{background:var(--deep);border-color:var(--deep);color:#fff;
+  padding-left:44px;box-shadow:0 10px 26px rgba(18,55,64,.18)}
+.kv input:checked + .kv-txt em{color:rgba(255,255,255,.82)}
+.kv input:checked + .kv-txt::before{content:"";position:absolute;left:17px;top:19px;
+  width:14px;height:14px;border-radius:50%;background:var(--brand-yellow);
+  box-shadow:0 0 0 3px rgba(255,255,130,.28)}
+.kv input:focus-visible + .kv-txt{outline:2px solid var(--gold-deep);outline-offset:3px}
+/* poslední volba přes celou šířku, aby mřížka nekončila prázdným místem */
+.kv:nth-child(4){grid-column:span 2}
+/* krátké zvýraznění po příchodu z tlačítka Konzultace */
+.kon-vyber.hl .kv-txt{border-color:var(--gold)}
+@media(max-width:560px){.kv-list{grid-template-columns:1fr}}
+
+/* ---------- poptávkový formulář ke zvolené technologii ---------- */
+.kon-form{margin-top:26px;border-top:1px solid var(--hair-d);padding-top:26px;
+  animation:kfIn .45s var(--ease) both}
+@keyframes kfIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.kf-hlava{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
+  margin-bottom:20px}
+.kf-hlava b{font-weight:400;color:var(--gold-deep)}
+.kf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 18px}
+.kf-plna{grid-column:1 / -1}
+.kf-pole{display:block}
+.kf-pole span{display:block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:7px}
+.kf-pole span i{font-style:normal;color:var(--gold-deep)}
+.kf-pole input,.kf-pole textarea{width:100%;font:inherit;font-size:15.5px;color:var(--ink);
+  background:#fff;border:1px solid var(--hair-d);padding:11px 13px;border-radius:0;
+  transition:border-color .25s,box-shadow .25s}
+.kf-pole textarea{resize:vertical;line-height:1.5}
+.kf-pole input:focus,.kf-pole textarea:focus{outline:none;border-color:var(--gold-deep);
+  box-shadow:0 0 0 3px rgba(65,177,202,.22)}
+.kf-pole input:user-invalid,.kf-pole textarea:user-invalid{border-color:#b4453b}
+.kf-souhlas{display:flex;gap:11px;align-items:flex-start;margin-top:18px;
+  font-size:13.5px;line-height:1.5;color:var(--ink-soft);cursor:pointer}
+.kf-souhlas input{width:17px;height:17px;flex:0 0 auto;margin-top:2px;accent-color:var(--gold-deep)}
+.kf-konec{display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px;margin-top:24px}
+.kf-konec .cta{margin-top:0;cursor:pointer}
+.kf-pozn{font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:38ch}
+@media(max-width:1000px){.kv-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kv:nth-child(4){grid-column:auto}.kv:last-child{grid-column:1 / -1}
+  .kf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.kf-grid,.kv-list{grid-template-columns:1fr}}
+
+.kontakt .cta{margin-top:26px}
+@media(max-width:900px){.kon-grid{grid-template-columns:1fr}
+  .kon-list{display:block}
+  .kon-list a,.kon-list div{flex:none}}
+
+footer{background:var(--bar-dark);color:var(--grey);padding:clamp(50px,6vw,80px) 0 34px;font-size:14px}
+.f-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:clamp(26px,3vw,48px)}
+footer img{height:36px;width:auto;margin-bottom:18px}
+footer h4{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:#fff;font-weight:400;margin-bottom:16px}
+footer a{display:block;padding:5px 0;transition:color .3s}
+footer a:hover{color:var(--gold-soft)}
+footer p{max-width:44ch;line-height:1.6}
+.f-bottom{border-top:1px solid rgba(255,255,255,.1);margin-top:clamp(36px,4vw,56px);padding-top:24px;
+  display:flex;flex-wrap:wrap;gap:10px 30px;justify-content:space-between;font-size:12.5px}
+@media(max-width:840px){.f-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.f-grid{grid-template-columns:1fr}}
