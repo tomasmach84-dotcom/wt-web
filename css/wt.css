@@ -11,36 +11,38 @@
    ========================================================================== */
 
 :root{
-  /* ---- FIREMNÍ BARVY Z LOGA WT (WT LOGO WT.pdf, 3. 9. 2026) ----
-     tyrkysová #41b1ca = plocha znaku, žlutá #ffff82 = paprsky světla */
+  /* ---- PALETA "PREMIUM" (4. 9. 2026) ----
+     Tmavé plochy nejsou tyrkysové, ale neutrální grafitová - tyrkys/žlutá
+     z loga zůstávají jen jako přesný akcent (tlačítka, čísla, detaily),
+     ne jako velká barevná plocha. Světlé plochy jsou čistě bílé/neutrální,
+     ne s tyrkysovým nádechem - denní světlo = bílá, ne barevná. */
   --brand:#41b1ca;
   --brand-yellow:#ffff82;
 
-  /* stín - tmavý tyrkys odvozený z firemní barvy */
-  --deep:#267688;
-  --steel:#267688;
-  --steel-2:#267688;
-  /* horní a spodní lišta (hlavička, patička) - mnohem tmavší než zbytek stránky */
-  --bar-dark:#143e48;
-  /* světlo - jemný tyrkysový nádech místo čisté bílé */
-  --paper:#eef7f9;
-  --paper-alt:#dbeef3;
-  --light:#e6f4f7;
-  /* text */
-  --ink:#082b32;
-  --ink-soft:#426c76;
-  --grey:#b8d4db;
-  /* akcent = barva denního světla (firemní žlutá na tmavém,
-     firemní tyrkys jako plocha, tmavý tyrkys pro text na světlém) */
+  /* stín - neutrální grafitová, ne tyrkysová */
+  --deep:#20262a;
+  --steel:#252c30;
+  --steel-2:#2f373c;
+  /* horní a spodní lišta (hlavička, patička) - téměř černá */
+  --bar-dark:#14181b;
+  /* světlo - čistě bílá/neutrální, bez tyrkysového nádechu */
+  --paper:#fbfcfc;
+  --paper-alt:#f1f3f4;
+  --light:#f6f7f8;
+  /* text - neutrální tmavá, ne tyrkysová */
+  --ink:#1a1d1f;
+  --ink-soft:#59616a;
+  --grey:#c9ced2;
+  /* akcent = firemní tyrkys/žlutá, použité úsporně jako detail */
   --gold:#41b1ca;
   --gold-soft:#ffff82;
-  --gold-deep:#1d5a68;
+  --gold-deep:#1a6b80;
 
-  /* pozadí hero - firemní tyrkys ztlumený do fotografické modři */
-  --hero-blue:#267688;
+  /* pozadí hero - stejná neutrální grafitová jako ostatní tmavé sekce */
+  --hero-blue:#20262a;
 
-  --hair-l:rgba(255,255,255,.18);
-  --hair-d:rgba(65,177,202,.16);
+  --hair-l:rgba(255,255,255,.14);
+  --hair-d:rgba(30,37,40,.14);
 
   --max:1660px;
   --gut:clamp(22px,4.5vw,64px);
@@ -57,6 +59,12 @@
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{font-family:var(--sans);font-weight:300;font-size:16.5px;line-height:1.7;
   color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* jemné zrno přes celou stránku - dodává ploché barvě hmatatelnost
+   (jako broušený kov / kvalitní papír), místo aby působila jako digitální plocha */
+body::after{content:"";position:fixed;inset:0;z-index:999;pointer-events:none;
+  opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 /* height:auto je nutné: HTML atribut height u <img> jinak přebije aspect-ratio
    a fotka se ořízne úplně jinak, než sekce zamýšlí. */
 img{display:block;max-width:100%;height:auto}
@@ -145,9 +153,12 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
    1 / HERO - mozaika čtyř realizací
    ========================================================================== */
 .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-  overflow:hidden;background:var(--hero-blue);color:#fff;
+  overflow:hidden;color:#fff;
+  background:radial-gradient(115% 100% at 12% -8%,var(--steel-2) 0%,var(--hero-blue) 46%,var(--deep) 100%);
   padding:clamp(104px,13vh,150px) 0 clamp(40px,6vh,72px)}
-/* žádná fototextura ani překryv - pozadí je jen a pouze přesná barva loga */
+/* jemný paprsek světla zprava shora - odkaz na denní světlo, ne barevný efekt */
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.05) 56%,transparent 74%)}
 
 .hero-grid{position:relative;z-index:2;width:100%;max-width:var(--max);margin:0 auto;
   padding:0 var(--gut);display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
@@ -211,9 +222,9 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 /* ==========================================================================
    2 / PROBLÉM - tmavá ocel
    ========================================================================== */
-.dark{background:var(--steel);color:var(--light)}
+.dark{background:radial-gradient(130% 120% at 85% 0%,var(--steel-2) 0%,var(--steel) 42%,var(--deep) 100%);color:var(--light)}
 .dark .h1,.dark .h2,.dark .h3{color:#fff}
-.deep{background:var(--deep);color:var(--light)}
+.deep{background:radial-gradient(130% 120% at 85% 0%,var(--steel-2) 0%,var(--deep) 55%);color:var(--light)}
 
 .problem{padding:var(--s-xl) 0;position:relative;overflow:hidden}
 .problem::before{content:"";position:absolute;inset:0;pointer-events:none;
