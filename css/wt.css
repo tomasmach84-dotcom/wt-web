@@ -11,20 +11,19 @@
    ========================================================================== */
 
 :root{
-  /* ---- PALETA "PREMIUM" (4. 9. 2026) ----
-     Tmavé plochy nejsou tyrkysové, ale neutrální grafitová - tyrkys/žlutá
-     z loga zůstávají jen jako přesný akcent (tlačítka, čísla, detaily),
-     ne jako velká barevná plocha. Světlé plochy jsou čistě bílé/neutrální,
-     ne s tyrkysovým nádechem - denní světlo = bílá, ne barevná. */
+  /* ---- PALETA "NÁMOŘNÍ MODRÁ" (17. 9. 2026, dle bannerů AZ/ZA) ----
+     Tmavé plochy jsou tmavě modré/petrolejové (ne neutrální grafitová) -
+     tyrkys/žlutá z loga zůstávají stejně jako dřív úsporný akcent
+     (tlačítka, čísla, detaily). Světlé plochy zůstávají čistě bílé/neutrální. */
   --brand:#41b1ca;
   --brand-yellow:#ffff82;
 
-  /* stín - neutrální grafitová, ne tyrkysová */
-  --deep:#20262a;
-  --steel:#252c30;
-  --steel-2:#2f373c;
-  /* horní a spodní lišta (hlavička, patička) - téměř černá */
-  --bar-dark:#14181b;
+  /* stín - tmavě modrá/petrolejová dle bannerů */
+  --deep:#0f2032;
+  --steel:#17293f;
+  --steel-2:#263f59;
+  /* horní a spodní lišta (hlavička, patička) - téměř černá modrá */
+  --bar-dark:#081420;
   /* světlo - čistě bílá/neutrální, bez tyrkysového nádechu */
   --paper:#fbfcfc;
   --paper-alt:#f1f3f4;
@@ -38,8 +37,8 @@
   --gold-soft:#ffff82;
   --gold-deep:#1a6b80;
 
-  /* pozadí hero - stejná neutrální grafitová jako ostatní tmavé sekce */
-  --hero-blue:#20262a;
+  /* pozadí hero - stejná tmavě modrá jako ostatní tmavé sekce */
+  --hero-blue:#0f2032;
 
   --hair-l:rgba(255,255,255,.14);
   --hair-d:rgba(30,37,40,.14);
@@ -65,6 +64,43 @@ body{font-family:var(--sans);font-weight:300;font-size:16.5px;line-height:1.7;
 body::after{content:"";position:fixed;inset:0;z-index:999;pointer-events:none;
   opacity:.05;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ==========================================================================
+   SLUNEČNÍ PAPRSEK NA POZADÍ (18.9.2026, páté kolo - SKUTEČNÁ fotka,
+   ne CSS napodobenina)
+   Majitel upozornil, že hero (skutečná fotka hero-svetlo.jpg) a zbytek
+   webu (CSS gradienty) vypadají jako dvě různá pozadí - gradient nikdy
+   nemá stejnou "hloubku"/zrnitost jako fotka, i když se barvy a směr trefí.
+   Řešení: STEJNÁ fotka (`img/hero-svetlo.jpg`) je teď pozadím i téhle
+   vrstvy přes celou stránku, ne odvozený gradient - hero a zbytek webu
+   tak mají doslova identický zdroj světla, ne dvě přiblížení.
+   mix-blend-mode:screen = fyzikálně sčítání světla - tmavá pole fotky
+   (skoro černá) k pozadí prakticky nic nepřidají, světlý paprsek na fotce
+   ho reálně rozsvítí; na světlých sekcích webu (bílý papír) je to tak
+   skoro neviditelné, na tmavých sekcích to "svítí" stejně jako v heru.
+   Klidné, STATICKÉ pozadí (position:fixed) - žádné putování ani posun se
+   scrollem (majitel dřív zamítl: "toto je šílené"). Jen jemné "dýchání"
+   jasu, nic se nehýbe ani neposouvá. */
+/* Jen horní (stěna+paprsek) část fotky - spodní část s podlahou/odrazem
+   je záměrně OŘÍZNUTÁ (position 18% 0%, ne 38%). Fotka je fixní vůči
+   obrazovce, takže při 38% se stejná "podlaha" objevovala úplně na každém
+   tmavém předělu stránky, ne jen jednou na konci - majitel (18.9.2026):
+   "šel by tento prvek podlahy nechat jen na konci stránky, na každém
+   předělu působí dost rušivě". Podlaha je teď zvlášť jen v patičce (viz
+   pravidlo `footer` níž), tady zůstává jen paprsek na stěnu. */
+body::before{content:"";position:fixed;inset:0;z-index:6;pointer-events:none;
+  mix-blend-mode:screen;animation:pathBreathe 18s ease-in-out infinite;
+  background-image:url(../img/hero-svetlo.jpg);background-size:cover;
+  background-position:18% 0%;background-repeat:no-repeat}
+@keyframes pathBreathe{0%,100%{opacity:.85}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+  body::before{animation:none}
+}
+/* Paprsek má svítit na barevných/tmavých plochách, ne přes fotky - přes
+   fotografii vypadá jako náhodný odlesk/vada, ne jako záměrný efekt (majitel,
+   18.9.2026). Fotky proto dostávají vlastní stacking context nad paprskem
+   (z-index vyšší než 6), takže je paprsek prostě "nevidí". */
+.mozaika .dl,.problem-photo,.tech-photo,.ref,.av-grid li,.sit-detail{z-index:7}
 /* height:auto je nutné: HTML atribut height u <img> jinak přebije aspect-ratio
    a fotka se ořízne úplně jinak, než sekce zamýšlí. */
 img{display:block;max-width:100%;height:auto}
@@ -152,15 +188,53 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 /* ==========================================================================
    1 / HERO - mozaika čtyř realizací
    ========================================================================== */
-.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-  overflow:hidden;color:#fff;
-  background:radial-gradient(115% 100% at 12% -8%,var(--steel-2) 0%,var(--hero-blue) 46%,var(--deep) 100%);
+/* z-index 8 = celá sekce (i okraje mimo hero-grid) uniká nad `body::before`
+   (fixní sitewide vrstva se stejnou fotkou, viz níž). Bez tohoto z-indexu
+   se při scrollu na kraji hera na chvíli překrývaly DVĚ kopie téže fotky -
+   jedna se scrolluje s obsahem stránky (tahle, `.hero`), druhá je přilepená
+   k obrazovce (`body::before`) - to vypadalo jako dvě poloprůhledné vrstvy
+   klouzající přes sebe (majitel, 18.9.2026: "jedna nepohyblivá a druhá
+   pohyblivá vrstva... při scrollování působí velmi rušivým dojmem"). Hero
+   teď svoji fotku ukazuje jen jednou, sitewide vrstva se tu vůbec neuplatní. */
+/* background-attachment:fixed - jinde na webu je pozadí (body::before)
+   přilepené k obrazovce a text přes něj scrolluje; hero mělo pozadí
+   normálně "přišroubované" ke svému obsahu, takže se se scrollem hýbalo
+   pryč spolu s textem - jediné místo, kde se to chovalo jinak (majitel,
+   18.9.2026: "pozadí by mělo být při scrolování jako druhá vrstva...
+   funguje všude jen ne v této úvodní stránce"). Teď je fixed i tady. */
+.hero{position:relative;z-index:8;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;color:#fff;background-color:var(--deep);
+  background-image:url(../img/hero-svetlo.jpg);background-size:cover;
+  background-position:18% 38%;background-repeat:no-repeat;background-attachment:fixed;
   padding:clamp(104px,13vh,150px) 0 clamp(40px,6vh,72px)}
-/* jemný paprsek světla zprava shora - odkaz na denní světlo, ne barevný efekt */
+/* skutečný paprsek světla (fotka) potřebuje ztmavení vlevo pod textem,
+   vpravo pod mozaikou je fotka skoro celá zakrytá dlaždicemi */
+/* Ztmavení odlehčeno a přeladěno do modré (18.9.2026, druhá oprava):
+   majitel porovnal hero se sekcí Východisko a chtěl stejnou světlost -
+   první snížení krytí nestačilo, protože tmavé sekce (`.dark`) jsou
+   světlejší ze DVOU důvodů: mají samy o sobě světlejší podklad
+   (--steel-2/--steel/--deep gradient) A NAVRCH ještě fotku PŘIDÁVAJÍ
+   (mix-blend-mode:screen v body::before). Hero měl jen ubírání (tmavý
+   overlay), žádné přidávání - proto zůstával tmavší i po snížení krytí.
+   Řešení: krytí tmavého overlaye dál sníženo A přidán `.hero::after` se
+   stejným světlým gradientem jako `.dark` (--steel-2 vpravo nahoře),
+   napojený přes screen, aby hero světlo stejně PŘIDÁVALO, ne jen ubíralo. */
 .hero::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
-  background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.05) 56%,transparent 74%)}
+  background:linear-gradient(100deg,rgba(15,32,50,.30) 0%,rgba(15,32,50,.15) 40%,rgba(15,32,50,.05) 60%,rgba(15,32,50,.18) 100%)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  mix-blend-mode:screen;
+  background:radial-gradient(130% 120% at 85% 0%,rgba(38,63,89,.55) 0%,rgba(38,63,89,.2) 45%,transparent 75%)}
 
-.hero-grid{position:relative;z-index:2;width:100%;max-width:var(--max);margin:0 auto;
+/* z-index 8 (ne 2): hero má svou VLASTNÍ fotku jako pozadí už v `.hero`,
+   takže sitewide vrstva `body::before` (z-index 6) by tu jen zdvojila
+   tutéž fotku navrch - na mozaice čtyř produktových fotek to bylo hodně
+   rušivé (majitel, 18.9.2026: "zrušit průhlednost úvodních fotek").
+   Přitom `.dl{z-index:7}` samo o sobě nestačilo: `.hero-grid` už má vlastní
+   z-index, čímž vzniká lokální stacking context, a z-index potomků (i .dl)
+   se pak počítá JEN uvnitř něj, ne v kořenovém kontextu vůči body::before -
+   celý hero-grid tak zůstával pod paprskem bez ohledu na z-index dlaždic.
+   Řešení: zvednout z-index samotného `.hero-grid` nad body::before. */
+.hero-grid{position:relative;z-index:8;width:100%;max-width:var(--max);margin:0 auto;
   padding:0 var(--gut);display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
   gap:clamp(28px,4vw,76px);align-items:center}
 
@@ -607,13 +681,19 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
   .kon-list{display:block}
   .kon-list a,.kon-list div{flex:none}}
 
-footer{background:var(--bar-dark);color:var(--grey);padding:clamp(50px,6vw,80px) 0 34px;font-size:14px}
+/* podlaha/odraz z fotky WWWW.png patří jen sem - konec stránky, kde
+   scéna doopravdy "končí na zemi" (viz vysvětlení u body::before výš) */
+footer{background-color:var(--bar-dark);
+  background-image:url(../img/hero-svetlo.jpg);background-size:cover;
+  background-position:18% 100%;background-repeat:no-repeat;background-blend-mode:screen;
+  color:var(--grey);padding:clamp(50px,6vw,80px) 0 34px;font-size:14px}
 .f-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:clamp(26px,3vw,48px)}
 footer img{height:36px;width:auto;margin-bottom:18px}
 footer h4{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:#fff;font-weight:400;margin-bottom:16px}
 footer a{display:block;padding:5px 0;transition:color .3s}
 footer a:hover{color:var(--gold-soft)}
 footer p{max-width:44ch;line-height:1.6}
+.f-slogan{color:var(--gold-soft);font-style:italic;font-weight:300;margin-bottom:8px}
 .f-bottom{border-top:1px solid rgba(255,255,255,.1);margin-top:clamp(36px,4vw,56px);padding-top:24px;
   display:flex;flex-wrap:wrap;gap:10px 30px;justify-content:space-between;font-size:12.5px}
 @media(max-width:840px){.f-grid{grid-template-columns:1fr 1fr}}
