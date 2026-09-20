@@ -30,12 +30,12 @@
   --light:#f6f7f8;
   /* text - neutrální tmavá, ne tyrkysová */
   --ink:#1a1d1f;
-  --ink-soft:#59616a;
+  --ink-soft:#3a4046;
   --grey:#c9ced2;
   /* akcent = firemní tyrkys/žlutá, použité úsporně jako detail */
   --gold:#41b1ca;
   --gold-soft:#ffff82;
-  --gold-deep:#1a6b80;
+  --gold-deep:#0f4d5c;
 
   /* pozadí hero - stejná tmavě modrá jako ostatní tmavé sekce */
   --hero-blue:#0f2032;
@@ -100,7 +100,7 @@ body::before{content:"";position:fixed;inset:0;z-index:6;pointer-events:none;
    fotografii vypadá jako náhodný odlesk/vada, ne jako záměrný efekt (majitel,
    18.9.2026). Fotky proto dostávají vlastní stacking context nad paprskem
    (z-index vyšší než 6), takže je paprsek prostě "nevidí". */
-.mozaika .dl,.problem-photo,.tech-photo,.ref,.av-grid li,.sit-detail{z-index:7}
+.mozaika .dl,.tech-photo,.sit-detail{z-index:7}
 /* height:auto je nutné: HTML atribut height u <img> jinak přebije aspect-ratio
    a fotka se ořízne úplně jinak, než sekce zamýšlí. */
 img{display:block;max-width:100%;height:auto}
@@ -109,13 +109,18 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 ul,ol{list-style:none}
 ::selection{background:var(--gold);color:#fff}
 
-.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+/* z-index 7 = uniká nad sitewide paprsek (body::before, z-index 6) - bez
+   toho paprsek prosvítal skrz text i přes neprůhledné pozadí sekce, protože
+   se maluje jako samostatná vrstva nad běžným obsahem (majitel, 20.9.2026:
+   "text musí být jako další vrstva nad pozadím"). Platí pro každou sekci,
+   která obsah balí do .wrap. */
+.wrap{position:relative;z-index:7;max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
 .g{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap)}
 
 /* ---------- typografie ---------- */
 .h1{font-weight:200;letter-spacing:-.035em;line-height:1.02;font-size:clamp(40px,5.6vw,94px)}
-.h2{font-weight:250;letter-spacing:-.03em;line-height:1.05;font-size:clamp(32px,4vw,64px)}
-.h3{font-weight:300;letter-spacing:-.022em;line-height:1.14;font-size:clamp(23px,2.5vw,38px)}
+.h2{font-weight:400;letter-spacing:-.03em;line-height:1.05;font-size:clamp(32px,4vw,64px)}
+.h3{font-weight:400;letter-spacing:-.022em;line-height:1.14;font-size:clamp(23px,2.5vw,38px)}
 .lead{font-weight:300;font-size:clamp(18px,1.55vw,23px);line-height:1.55}
 .k{font-size:12px;letter-spacing:.26em;text-transform:uppercase;font-weight:400;color:var(--gold-deep)}
 .k.on-dark{color:var(--gold-soft)}
@@ -302,53 +307,6 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 .dark .h1,.dark .h2,.dark .h3{color:#fff}
 .deep{background:radial-gradient(130% 120% at 85% 0%,var(--steel-2) 0%,var(--deep) 55%);color:var(--light)}
 
-.problem{padding:var(--s-xl) 0;position:relative;overflow:hidden}
-.problem::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(48% 62% at 80% -6%,rgba(255,255,130,.13),transparent 62%)}
-.problem .g{position:relative;align-items:start;row-gap:clamp(40px,6vw,68px)}
-.problem-text{grid-column:span 6}
-.problem h2{margin:26px 0 30px;max-width:15ch}
-.problem h2 b{font-weight:200;color:var(--gold-soft)}
-.problem p{color:#d0e3e7;max-width:52ch;margin-bottom:20px}
-/* fotka kopíruje výšku textového sloupce, aby oba končily zároveň */
-.problem-photo{grid-column:span 6;position:relative;align-self:stretch;
-  display:flex;flex-direction:column}
-.problem-photo img{width:100%;flex:1 1 auto;min-height:340px;object-fit:cover}
-.problem-photo figcaption{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding-top:14px}
-@media(max-width:900px){
-  .problem-text,.problem-photo{grid-column:span 12}
-  .problem-photo{display:block}
-  .problem-photo img{aspect-ratio:4/3;min-height:0}
-}
-
-/* ==========================================================================
-   NA KONCI ROZHODUJE SVĚTLO - tři principy cesty denního světla
-   Střídmý technický blok: vlasová linka, tyrkysový úsek nad každým principem,
-   žádné ikony. Staví na stejných proměnných jako zbytek webu.
-   ========================================================================== */
-.principy{padding:var(--s-md) 0;background:var(--light)}
-.pri-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
-  gap:clamp(22px,4vw,72px);align-items:end;margin-bottom:clamp(38px,4.4vw,66px)}
-.pri-head h2{margin:22px 0 0}
-.pri-head p{color:var(--ink-soft);max-width:54ch}
-.pri-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,3vw,56px);
-  border-top:1px solid var(--hair-d)}
-.pri-grid>div{position:relative;padding-top:clamp(20px,2.4vw,34px)}
-.pri-grid>div::before{content:"";position:absolute;top:-1px;left:0;
-  width:clamp(38px,5.5vw,86px);height:2px;background:var(--gold)}
-.pri-n{display:block;font-size:12px;letter-spacing:.2em;color:var(--ink-soft)}
-.pri-t{font-size:clamp(19px,1.75vw,26px);font-weight:300;letter-spacing:.14em;
-  text-transform:uppercase;margin:14px 0 14px}
-.pri-grid p{color:var(--ink-soft);font-size:15.5px;line-height:1.6;max-width:36ch}
-.pri-note{margin-top:clamp(28px,3.2vw,46px);font-size:15px;color:var(--ink-soft);max-width:70ch}
-.pri-note b{font-weight:400;color:var(--ink)}
-@media(max-width:900px){
-  .pri-head{grid-template-columns:1fr;align-items:start}
-  .pri-grid{grid-template-columns:1fr;gap:0}
-  .pri-grid>div{padding-bottom:clamp(20px,3vw,30px);border-bottom:1px solid var(--hair-d)}
-  .pri-grid>div:last-child{border-bottom:0}
-}
-
 /* ==========================================================================
    3 / JAK POTŘEBUJETE SVĚTLO PŘIVÉST - interaktivní výběr situace
    ========================================================================== */
@@ -417,7 +375,9 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 .tech-photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:18px 22px;font-size:11.5px;
   letter-spacing:.18em;text-transform:uppercase;color:#fff;
   background:linear-gradient(to top,rgba(18,55,64,.72),transparent)}
-.tech-body{display:flex;flex-direction:column;justify-content:center;
+/* z-index 7 = stejná immunita vůči sitewide paprsku jako .wrap - text
+   panelu leží někdy vlevo, přesně tam, kudy paprsek prochází */
+.tech-body{position:relative;z-index:7;display:flex;flex-direction:column;justify-content:center;
   padding:clamp(48px,7vw,108px) clamp(26px,5vw,92px)}
 .tech.dark .tech-body{background:var(--steel)}
 .tech.light .tech-body{background:var(--paper)}
@@ -430,20 +390,9 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 .tech-body .lead{max-width:44ch;margin-bottom:30px}
 .tech.dark .tech-body .lead{color:#d0e3e7}
 .tech.light .tech-body .lead,.tech.alt .tech-body .lead{color:var(--ink-soft)}
-/* dva sloupce a lichá poslední položka přes celou šířku, aby poslední řádek
-   nekončil prázdným místem */
-.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 26px;
-  border-top:1px solid var(--hair-d);padding-top:22px;margin-bottom:34px}
-.tech.dark .facts{border-top-color:var(--hair-l)}
-.facts li{font-size:14px;padding:8px 0;line-height:1.45;color:var(--ink-soft)}
-.facts li:last-child:nth-child(odd){grid-column:1 / -1}
-.facts li b{display:block;font-weight:400;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--gold-deep);margin-bottom:4px}
-.tech.dark .facts li{color:#c8dbe0}
-.tech.dark .facts li b{color:var(--gold-soft)}
 /* postavení WT u dané technologie (výhradní dodavatel / dodavatel pro ČR) */
 .role{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--gold-deep);margin:-12px 0 30px}
+  text-transform:uppercase;color:var(--gold-deep);margin:0 0 30px}
 .tech.dark .role{color:var(--gold-soft)}
 .role .dot{width:6px;height:6px;flex:0 0 auto;background:currentColor;border-radius:50%;opacity:.85}
 .role-mini{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
@@ -455,7 +404,7 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 /* na tmavé sekci je tlačítko firemně žluté (žlutý paprsek na tyrkysové ploše
    loga), aby se neztratilo v tyrkysovém pozadí */
 .tech.dark .cta.web{background:var(--brand-yellow);border-color:var(--brand-yellow);color:#09242a}
-.tech.dark .cta.web:hover{background:#fff;border-color:#fff;color:#09242a}
+.tech.dark .cta.web:hover{background:var(--gold);border-color:var(--gold);color:#09242a}
 .go-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px}
 /* druhý, tišší odkaz přímo na web značky u každé situace */
 .sit-links{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px}
@@ -470,76 +419,11 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 }
 
 /* ==========================================================================
-   5 / REALIZACE
-   ========================================================================== */
-.realizace{padding:var(--s-xl) 0}
-.realizace .sec-head p{color:var(--grey)}
-.ref-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(26px,3vw,44px) var(--gap)}
-.ref{position:relative}
-.ref .shot{overflow:hidden}
-.ref img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
-.ref:hover img{transform:scale(1.04)}
-.ref figcaption{padding-top:14px;font-size:13.5px;color:var(--grey);display:flex;gap:14px;align-items:baseline}
-.ref figcaption b{font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);
-  flex:0 0 auto;padding-top:2px}
-/* Poměry stran jsou dopočítané tak, aby dvojice v jednom řádku končily ve stejné
-   výšce a pod kratší fotkou nezůstávala prázdná díra:
-   ref-a (7 sloupců, 3:2) + ref-b (5 sloupců, 53:50) mají stejnou výšku,
-   stejně tak ref-d (8 sloupců, 16:9) + ref-f (4 sloupce, 6:7).
-   Trojice ref-c a dvojice ref-e mají stejný poměr, takže sedí samy od sebe. */
-.ref-a{grid-column:span 7}.ref-a img{aspect-ratio:3/2}
-.ref-b{grid-column:span 5}.ref-b img{aspect-ratio:53/50}
-.ref-c{grid-column:span 4}.ref-c img{aspect-ratio:3/4}
-.ref-d{grid-column:span 8}.ref-d img{aspect-ratio:16/9}
-.ref-e{grid-column:span 6}.ref-e img{aspect-ratio:3/2}
-.ref-f{grid-column:span 4}.ref-f img{aspect-ratio:6/7}
-@media(max-width:840px){
-  .ref-a,.ref-b,.ref-c,.ref-d,.ref-e,.ref-f{grid-column:span 12}
-  .ref-c img{aspect-ratio:3/4}   /* portrétní fotky nechat na výšku, jinak se ořízne půlka snímku */
-}
-
-/* ==========================================================================
-   6 / PRO ARCHITEKTY
-   ========================================================================== */
-.architekti{padding:var(--s-xl) 0;background:var(--paper)}
-/* vlevo přehled čtyř technologií místo jedné fotky - k „nejdřív posudek,
-   potom výrobek" patří ukázka variant, ze kterých se vybírá */
-.arch-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
-  gap:clamp(30px,5vw,84px);align-items:stretch}
-.arch-vary{display:flex;flex-direction:column}
-.av-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  grid-auto-rows:1fr;gap:clamp(8px,1vw,14px);flex:1 1 auto}
-.av-grid li{position:relative;overflow:hidden;background:var(--deep);min-height:190px}
-.av-grid img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.av-grid li:hover img{transform:scale(1.05)}
-.av-grid li::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to top,rgba(18,55,64,.85) 0%,rgba(18,55,64,.26) 42%,transparent 68%)}
-.av-grid span{position:absolute;left:clamp(12px,1.2vw,18px);right:12px;bottom:clamp(11px,1.2vw,16px);
-  z-index:2;color:#fff;font-size:clamp(13px,1.05vw,15px);line-height:1.25;display:block}
-.av-grid span b{display:block;font-weight:400;font-size:10.5px;letter-spacing:.24em;
-  color:var(--gold-soft);margin-bottom:5px}
-.av-grid span em{display:block;font-style:normal;font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;color:rgba(255,255,255,.72);margin-top:3px}
-.av-pozn{font-size:13px;line-height:1.5;color:var(--ink-soft);padding-top:14px;max-width:46ch}
-.arch-photo figcaption{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding-top:14px}
-.arch-list{border-top:1px solid var(--hair-d);margin-top:34px}
-.arch-list li{display:grid;grid-template-columns:44px 1fr;gap:clamp(12px,1.6vw,24px);
-  padding:clamp(18px,2vw,24px) 0;border-bottom:1px solid var(--hair-d)}
-.arch-list .n{font-size:12px;letter-spacing:.14em;color:var(--gold)}
-.arch-list h3{font-size:clamp(18px,1.5vw,22px);font-weight:400;margin-bottom:6px}
-.arch-list p{font-size:15.5px;color:var(--ink-soft);max-width:54ch}
-.arch-cta{margin-top:38px;display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center}
-@media(max-width:900px){
-  .arch-grid{grid-template-columns:1fr}
-  .av-grid li{min-height:0;aspect-ratio:1/1}
-}
-
-/* ==========================================================================
-   7 / WT - WINDOWS TOMORROW
+   5 / WT - WINDOWS TOMORROW
    ========================================================================== */
 .wt{position:relative;padding:var(--s-xl) 0;color:var(--light);background:var(--deep);overflow:hidden}
-/* žádná fototextura ani překryv - pozadí je jen a pouze přesná barva loga */
-.wt .wrap{position:relative;z-index:2}
+/* žádná fototextura ani překryv - pozadí je jen a pouze přesná barva loga
+   (immunita vůči paprsku teď dává obecné pravidlo .wrap výš) */
 .wt-logo{height:52px;width:auto;margin-bottom:34px}
 .wt-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   gap:clamp(30px,5vw,80px);align-items:stretch}
@@ -560,49 +444,6 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 /* ==========================================================================
    VE ZKRATCE (souhrn pro čtenáře i vyhledávače)
    ========================================================================== */
-/* „Ve zkratce" je pás přes celou šířku pod textem i fotkou - dřív visel jen
-   v levém sloupci a vedle fotky zůstávalo velké prázdné místo */
-.zkratka{grid-column:1 / -1;border-top:1px solid var(--hair-l);padding-top:clamp(24px,2.8vw,34px)}
-.zkratka-nadpis{font-size:12px;letter-spacing:.26em;text-transform:uppercase;font-weight:400;
-  color:var(--gold-soft);margin-bottom:18px}
-.zkratka dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(22px,2.6vw,34px) clamp(24px,3vw,48px)}
-.zk-pol{border-top:1px solid var(--hair-l);padding-top:14px}
-@media(max-width:1100px){.zkratka dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.zkratka dt{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);
-  margin-bottom:8px}
-.zkratka dd{font-size:15px;line-height:1.6;color:#d0e3e7;max-width:42ch}
-@media(max-width:640px){
-  .zkratka dl{grid-template-columns:1fr;gap:20px}
-  .zkratka dd{margin-bottom:0}
-}
-
-/* ==========================================================================
-   ČASTÉ DOTAZY
-   ========================================================================== */
-/* dvousloupcová sazba: nadpis vlevo, otázky vpravo - dřív zůstávala
-   celá pravá třetina sekce prázdná */
-.faq{padding:var(--s-xl) 0;background:var(--paper)}
-.faq-grid{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);
-  gap:clamp(28px,4vw,72px);align-items:start}
-.faq-grid .sec-head{margin-bottom:0;position:sticky;top:120px}
-.faq-list{border-top:1px solid var(--hair-d)}
-@media(max-width:900px){
-  .faq-grid{grid-template-columns:1fr}
-  .faq-grid .sec-head{position:static}
-}
-.faq details{border-bottom:1px solid var(--hair-d)}
-.faq summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:18px;
-  padding:clamp(18px,2vw,24px) 4px;transition:color .3s}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"";margin-left:auto;flex:0 0 auto;width:12px;height:12px;
-  border-right:1px solid currentColor;border-bottom:1px solid currentColor;
-  transform:rotate(45deg) translate(-3px,-3px);transition:transform .35s var(--ease);color:var(--gold)}
-.faq details[open] summary::after{transform:rotate(-135deg) translate(-3px,-3px)}
-.faq summary:hover{color:var(--gold-deep)}
-.faq summary h3{font-size:clamp(17px,1.5vw,21px);font-weight:400;line-height:1.3;display:inline}
-.faq details p{padding:0 40px clamp(20px,2.2vw,28px) 4px;max-width:74ch;color:var(--ink-soft);font-size:16px}
-
 /* ==========================================================================
    KONTAKT + PATIČKA
    ========================================================================== */
@@ -627,11 +468,15 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 .kv-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .kv{position:relative;display:block;cursor:pointer}
 .kv input{position:absolute;opacity:0;width:1px;height:1px}
-.kv-txt{position:relative;display:block;padding:14px 16px 15px;border:1px solid var(--hair-d);
-  background:rgba(255,255,255,.42);transition:border-color .25s,background .25s,box-shadow .25s}
+/* nevybraná karta = firemní tyrkys/modrá z loga; při najetí myší se
+   zbarví do žluté z loga; vybraná zůstává tmavá s žlutou tečkou
+   (majitel, 20.9.2026) */
+.kv-txt{position:relative;display:block;padding:14px 16px 15px;border:1px solid transparent;
+  background:var(--gold);color:#fff;transition:border-color .25s,background .25s,box-shadow .25s,color .25s}
 .kv-txt b{display:block;font-weight:400;font-size:15.5px;letter-spacing:-.01em}
-.kv-txt em{display:block;font-style:normal;font-size:12.5px;line-height:1.45;color:var(--ink-soft);margin-top:3px}
-.kv:hover .kv-txt{border-color:var(--gold);background:#fff}
+.kv-txt em{display:block;font-style:normal;font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.85);margin-top:3px;transition:color .25s}
+.kv:hover .kv-txt{background:var(--brand-yellow);color:#09242a}
+.kv:hover .kv-txt em{color:rgba(9,36,42,.72)}
 /* vybraná volba je plná tyrkysová plocha s bílým textem a žlutou tečkou,
    aby na první pohled bylo jasné, co je zvolené */
 .kv input:checked + .kv-txt{background:var(--deep);border-color:var(--deep);color:#fff;
@@ -641,10 +486,9 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
   width:14px;height:14px;border-radius:50%;background:var(--brand-yellow);
   box-shadow:0 0 0 3px rgba(255,255,130,.28)}
 .kv input:focus-visible + .kv-txt{outline:2px solid var(--gold-deep);outline-offset:3px}
-/* poslední volba přes celou šířku, aby mřížka nekončila prázdným místem */
-.kv:nth-child(4){grid-column:span 2}
-/* krátké zvýraznění po příchodu z tlačítka Konzultace */
-.kon-vyber.hl .kv-txt{border-color:var(--gold)}
+/* krátké zvýraznění po příchodu z tlačítka Konzultace - bílý lem, aby byl
+   vidět i na tyrkysové kartě */
+.kon-vyber.hl .kv-txt{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.35)}
 @media(max-width:560px){.kv-list{grid-template-columns:1fr}}
 
 /* ---------- poptávkový formulář ke zvolené technologii ---------- */
@@ -674,7 +518,7 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
 .kf-konec .cta{margin-top:0;cursor:pointer}
 .kf-pozn{font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:38ch}
 @media(max-width:1000px){.kv-list{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .kv:nth-child(4){grid-column:auto}.kv:last-child{grid-column:1 / -1}
+  .kv:last-child{grid-column:1 / -1}
   .kf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.kf-grid,.kv-list{grid-template-columns:1fr}}
 
@@ -684,10 +528,14 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
   .kon-list a,.kon-list div{flex:none}}
 
 /* podlaha/odraz z fotky WWWW.png patří jen sem - konec stránky, kde
-   scéna doopravdy "končí na zemi" (viz vysvětlení u body::before výš) */
+   scéna doopravdy "končí na zemi" (viz vysvětlení u body::before výš).
+   Tmavá clona (první vrstva, normální prolnutí) ztlumí jas fotky, aby
+   paprsek zůstal jen náladou na pozadí a nikdy nepřebil logo ani text
+   nad ním (majitel, 20.9.2026: "text ani logo se nemá vybledit"). */
 footer{background-color:var(--bar-dark);
-  background-image:url(../img/hero-svetlo.jpg);background-size:cover;
-  background-position:18% 100%;background-repeat:no-repeat;background-blend-mode:screen;
+  background-image:linear-gradient(rgba(8,20,32,.55),rgba(8,20,32,.55)),url(../img/hero-svetlo.jpg);
+  background-size:cover;background-position:18% 100%;background-repeat:no-repeat;
+  background-blend-mode:normal,screen;
   color:var(--grey);padding:clamp(50px,6vw,80px) 0 34px;font-size:14px}
 .f-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:clamp(26px,3vw,48px)}
 footer img{height:36px;width:auto;margin-bottom:18px}
