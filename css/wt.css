@@ -379,7 +379,7 @@ header.menu-open .menu-btn i:nth-child(3){transform:translateY(-7px) rotate(-45d
    panelu leží někdy vlevo, přesně tam, kudy paprsek prochází */
 .tech-body{position:relative;z-index:7;display:flex;flex-direction:column;justify-content:center;
   padding:clamp(48px,7vw,108px) clamp(26px,5vw,92px)}
-.tech.dark .tech-body{background:var(--steel)}
+.tech.dark .tech-body{background:radial-gradient(130% 120% at 85% 0%,var(--steel-2) 0%,var(--steel) 42%,var(--deep) 100%)}
 .tech.light .tech-body{background:var(--paper)}
 .tech.alt .tech-body{background:var(--paper-alt)}
 .tech.rev .tech-photo{order:2}
